@@ -15,9 +15,23 @@ export const CellMeta = {
 export type CellMetaKey = keyof typeof CellMeta;
 export type CellMetaValue = (typeof CellMeta)[CellMetaKey];
 
-export type Cell = {
+export const CellStatus = {
+  HIDDEN: 0,
+  REVEALED: 1,
+  FLAGGED: 2,
+} as const;
+
+export type CellStatusKey = keyof typeof CellStatus;
+export type CellStatusValue = (typeof CellStatus)[CellStatusKey];
+
+export type Coordinate = {
   x: number;
   y: number;
+};
+
+export type Cell = {
+  x: Coordinate["x"];
+  y: Coordinate["y"];
   value: CellMetaValue;
-  isRevealed: boolean;
+  status: CellStatusValue;
 };
