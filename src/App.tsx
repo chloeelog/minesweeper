@@ -1,12 +1,17 @@
+import { Provider } from "react-redux";
+import { store } from "@store";
+
 import { Board } from "@components/Board";
 
 import * as S from "./App.style";
 
 function App() {
   return (
-    <S.Page>
-      <Board />
-    </S.Page>
+    <Provider store={store}>
+      <S.Page>
+        <Board />
+      </S.Page>
+    </Provider>
   );
 }
 

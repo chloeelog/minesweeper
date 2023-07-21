@@ -1,7 +1,14 @@
-import { LEVELS } from "@constants";
+import { useState } from "react";
+
+import { LEVEL } from "@constants";
+import { useDispatch } from "react-redux";
 
 export const ControlPanel = () => {
-  const levels = Object.values(LEVELS);
+  const dispatch = useDispatch();
+
+  const buttonLabel = useState("시작");
+
+  const levels = Object.values(LEVEL);
 
   return (
     <header>
@@ -13,6 +20,7 @@ export const ControlPanel = () => {
           </option>
         ))}
       </select>
+      <button></button>
     </header>
   );
 };

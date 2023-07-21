@@ -1,4 +1,4 @@
-export const LEVELS = {
+export const LEVEL = {
   BEGINNER: {
     value: "BEGINNER",
     label: "Beginner🌱",
