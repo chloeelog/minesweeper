@@ -21,6 +21,7 @@ export const CellStatus = {
   HIDDEN: 0,
   REVEALED: 1,
   FLAGGED: 2,
+  EXPLODED: 3,
 } as const;
 
 export type CellStatusKey = keyof typeof CellStatus;

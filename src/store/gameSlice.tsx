@@ -1,35 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // TODO: Timer 옵션 추가시 "paused" 상태도 추가할 것!
-type GameState = "ready" | "playing" | "clear" | "over";
+export type GameState = "playing" | "clear" | "over";
 
 export const gameSlice = createSlice({
   name: "game",
   initialState: {
-    _t: "ready" as GameState,
+    gameState: "playing" as GameState,
     startsAt: null,
   },
   reducers: {
     startGame: (state, { payload }) => {
-      state._t = "playing";
+      state.gameState = "playing";
       state.startsAt = payload;
     },
     clearGame: (state) => {
-      state._t = "clear";
+      state.gameState = "clear";
       state.startsAt = null;
     },
     overGame: (state) => {
-      state._t = "over";
-      state.startsAt = null;
-    },
-    initializeGame: (state) => {
-      state._t = "ready";
+      state.gameState = "over";
       state.startsAt = null;
     },
   },
 });
 
-export const { startGame, clearGame, overGame, initializeGame } =
-  gameSlice.actions;
+export const { startGame, clearGame, overGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

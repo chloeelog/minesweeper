@@ -1,6 +1,7 @@
 import { Cell } from ".";
 
+export type FieldMeta = { row: number; col: number; mineCount: number };
 export type Field = {
-  meta: { row: number; col: number; mine: number };
+  meta: FieldMeta;
   info: Array<Array<Cell>>;
 };

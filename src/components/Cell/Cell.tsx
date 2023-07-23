@@ -1,26 +1,34 @@
-import { CellMeta, CellStatus, Cell as CellType, Coordinate } from "@types";
-import * as S from "./Cell.style";
 import { MouseEvent } from "react";
+
+import { CellMeta, CellStatus, Cell as CellType } from "@types";
+
+import { useSelector } from "react-redux";
+
+import { GameState, RootState } from "@store";
+
+import * as S from "./Cell.style";
 
 type CellProps = {
   cell: CellType;
-  onClick: (coord: Coordinate) => void;
-  onRightClick: (coord: Coordinate) => void;
+  onClick: (cell: CellType) => void;
+  onRightClick: (cell: CellType) => void;
 };
 
 export const Cell = ({ cell, onClick, onRightClick }: CellProps) => {
-  const { x, y, status } = cell;
-  const displayValue = getDisplayedValue(cell);
+  const { gameState } = useSelector((state: RootState) => state.gameSlice);
+
+  const displayValue = getDisplayedValue(cell, gameState);
+
+  const { status } = cell;
   const isRevealed = status === CellStatus.REVEALED;
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    console.log(event.button);
-    onClick({ x, y });
+  const handleClick = () => {
+    onClick(cell);
   };
 
   const handleRightClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    onRightClick({ x, y });
+    onRightClick(cell);
   };
 
   return (
@@ -34,15 +42,23 @@ export const Cell = ({ cell, onClick, onRightClick }: CellProps) => {
   );
 };
 
-function getDisplayedValue(cell: CellType) {
+function getDisplayedValue(cell: CellType, gameState: GameState) {
   const { value, status } = cell;
 
   if (status === CellStatus.HIDDEN) {
-    return "";
+    return gameState === "playing" ? "" : value === CellMeta.MINE ? "💣" : "";
   }
 
   if (status === CellStatus.FLAGGED) {
-    return "🚩";
+    return gameState === "playing"
+      ? "🚩"
+      : value === CellMeta.MINE
+      ? "🚩"
+      : "❌";
+  }
+
+  if (status === CellStatus.EXPLODED) {
+    return "💥";
   }
 
   if (value === CellMeta.EMPTY) {
