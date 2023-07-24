@@ -1,4 +1,6 @@
-export const LEVEL = {
+import { LevelType } from "@types";
+
+export const LEVEL: LevelType = {
   BEGINNER: {
     value: "BEGINNER",
     label: "Beginner🌱",

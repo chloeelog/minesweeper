@@ -15,12 +15,9 @@ export const Field = () => {
     (state: RootState) => state.fieldSlice.field
   );
 
+  const { row, col } = initialField.meta;
   const field = cloneDeep(initialField);
   const info = field.info.flat();
-
-  const { row, col } = useSelector(
-    (state: RootState) => state.configurationSlice
-  );
 
   const handleCellClick = (cell: CellType) => {
     const { x, y, value } = cell;

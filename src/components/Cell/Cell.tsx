@@ -1,10 +1,8 @@
 import { MouseEvent } from "react";
-
-import { CellMeta, CellStatus, Cell as CellType } from "@types";
-
 import { useSelector } from "react-redux";
 
 import { GameState, RootState } from "@store";
+import { CellMeta, CellStatus, Cell as CellType } from "@types";
 
 import * as S from "./Cell.style";
 

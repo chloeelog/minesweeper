@@ -1,5 +1,9 @@
-import { LEVEL } from "@constants";
-
-export type LevelType = typeof LEVEL;
-export type LevelKey = keyof LevelType;
-export type LevelValue = LevelType[LevelKey];
+export type LevelType = Record<LevelKey, Level>;
+export type LevelKey = "BEGINNER" | "INTERMEDIATE" | "EXPERT" | "CUSTOM";
+export type Level = {
+  value: LevelKey;
+  label: string;
+  row: number;
+  col: number;
+  mineCount: number;
+};

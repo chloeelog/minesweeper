@@ -1,10 +1,12 @@
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { LEVEL } from "@constants";
 import { RootState, setLevel, updateField } from "@store";
-import { LevelKey, LevelValue } from "@types";
+import { LevelKey, FieldMeta } from "@types";
 import { getInitializedField } from "@utils";
+
+import * as S from "./ControlPanel.style";
 
 export const ControlPanel = () => {
   const dispatch = useDispatch();
@@ -12,31 +14,63 @@ export const ControlPanel = () => {
 
   const { level } = useSelector((state: RootState) => state.configurationSlice);
 
-  const initialize = ({ row, col, mineCount }: LevelValue) => {
+  const isCustomLevel = level === LEVEL.CUSTOM;
+
+  const [customRow, setCustomRow] = useState<number>(0);
+  const [customCol, setCustomCol] = useState<number>(0);
+  const [customMineCount, setCustomMineCount] = useState<number>(0);
+
+  const initializeField = ({ row, col, mineCount }: FieldMeta) => {
     const field = getInitializedField({ row, col, mineCount });
     dispatch(updateField(field));
   };
 
   const handleUpdateLevel = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedLevel = event.target.value as LevelKey;
-
-    if (selectedLevel === "CUSTOM") {
-      // TODO: 커스텀 레벨 입력 창 띄워주기
-      return;
-    }
-
     const level = LEVEL[selectedLevel];
     dispatch(setLevel(level));
-    initialize(level);
   };
 
-  useEffect(() => {
-    initialize(level);
-  }, []);
+  const handleInitializeClick = () => {
+    if (level === LEVEL.CUSTOM) {
+      initializeField({
+        row: customRow,
+        col: customCol,
+        mineCount: customMineCount,
+      });
+      return;
+    }
+    initializeField(level);
+  };
 
   return (
     <header>
       <h1>지뢰찾기</h1>
+      <S.Row>
+        <input
+          type="number"
+          value={customRow}
+          max={100}
+          onChange={(event) => setCustomRow(Number(event.target.value))}
+          disabled={!isCustomLevel}
+        />
+        X
+        <input
+          type="number"
+          value={customCol}
+          max={100}
+          onChange={(event) => setCustomCol(Number(event.target.value))}
+          disabled={!isCustomLevel}
+        />
+        : 지뢰 갯수
+        <input
+          type="number"
+          value={customMineCount}
+          max={customRow * customCol}
+          onChange={(event) => setCustomMineCount(Number(event.target.value))}
+          disabled={!isCustomLevel}
+        />
+      </S.Row>
       <select onChange={handleUpdateLevel} defaultValue={level.value}>
         {levels.map(({ label, value }) => (
           <option key={value} value={value}>
@@ -44,7 +78,7 @@ export const ControlPanel = () => {
           </option>
         ))}
       </select>
-      <button></button>
+      <button onClick={handleInitializeClick}>새로 시작하기</button>
     </header>
   );
 };

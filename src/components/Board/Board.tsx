@@ -9,9 +9,8 @@ import { Field } from "@components/Field";
 
 export const Board = () => {
   const dispatch = useDispatch();
-  const { row, col, mineCount } = useSelector(
-    (state: RootState) => state.configurationSlice
-  );
+  const { level } = useSelector((state: RootState) => state.configurationSlice);
+  const { row, col, mineCount } = level;
   const { field } = useSelector((state: RootState) => state.fieldSlice);
 
   useEffect(() => {
