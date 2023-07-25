@@ -17,8 +17,9 @@ export const Cell = ({ cell, onClick, onRightClick }: CellProps) => {
 
   const displayValue = getDisplayedValue(cell, gameState);
 
-  const { status } = cell;
+  const { status, value } = cell;
   const isRevealed = status === CellStatus.REVEALED;
+  const isExploded = status === CellStatus.EXPLODED;
 
   const handleClick = () => {
     onClick(cell);
@@ -34,6 +35,8 @@ export const Cell = ({ cell, onClick, onRightClick }: CellProps) => {
       onClick={handleClick}
       onContextMenu={handleRightClick}
       $isRevealed={isRevealed}
+      $isExploded={isExploded}
+      $value={value}
     >
       {displayValue}
     </S.Cell>
