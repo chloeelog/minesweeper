@@ -23,11 +23,7 @@ export const ControlPanel = () => {
   const [customCol, setCustomCol] = useState<number>(0);
   const [customMineCount, setCustomMineCount] = useState<number>(0);
 
-  const initializeField = ({
-    row,
-    col,
-    mineCount,
-  }: Omit<FieldMeta, "flagCount">) => {
+  const initializeField = ({ row, col, mineCount }: FieldMeta) => {
     const field = getInitializedField({ row, col, mineCount });
     dispatch(updateField(field));
   };

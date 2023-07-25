@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cloneDeep } from "lodash-es";
 
 import { Cell as CellType, CellMeta, CellStatus } from "@types";
-import { RootState, overGame, startGame, updateField } from "@store";
+import { RootState, clearGame, overGame, startGame, updateField } from "@store";
 
 import { Cell } from "@components/Cell";
 
@@ -17,9 +17,10 @@ export const Field = () => {
     (state: RootState) => state.fieldSlice.field
   );
 
-  const { row, col } = initialField.meta;
   const field = cloneDeep(initialField);
-  const { mineCount, flagCount } = field.meta;
+
+  const { row, col, mineCount } = field.meta;
+
   const info = field.info.flat();
 
   const handleCellClick = (cell: CellType) => {
@@ -38,7 +39,11 @@ export const Field = () => {
       field.info[x][y] = { ...field.info[x][y], status: CellStatus.EXPLODED };
       dispatch(overGame());
     } else {
+      if (field.info[x][y].status === CellStatus.FLAGGED) {
+        field.status.flagCount -= 1;
+      }
       field.info[x][y] = { ...field.info[x][y], status: CellStatus.REVEALED };
+      field.status.revealedCount += 1;
     }
 
     if (value === CellMeta.EMPTY) {
@@ -46,6 +51,11 @@ export const Field = () => {
     }
 
     dispatch(updateField({ ...field }));
+
+    const { flagCount, revealedCount } = field.status;
+    if (flagCount === mineCount && revealedCount === row * col - mineCount) {
+      dispatch(clearGame());
+    }
   };
 
   const handleCellRightClick = (cell: CellType) => {
@@ -57,6 +67,8 @@ export const Field = () => {
       const now = Date.now();
       dispatch(startGame(now));
     }
+
+    const { flagCount, revealedCount } = field.status;
 
     if (flagCount >= mineCount) {
       alert("더 이상 깃발을 꽂을 수 없어요!");
@@ -71,13 +83,17 @@ export const Field = () => {
 
     if (status === CellStatus.FLAGGED) {
       field.info[x][y].status = CellStatus.HIDDEN;
-      field.meta.flagCount -= 1;
+      field.status.flagCount -= 1;
     } else {
       field.info[x][y].status = CellStatus.FLAGGED;
-      field.meta.flagCount += 1;
+      field.status.flagCount += 1;
     }
 
     dispatch(updateField({ ...field }));
+
+    if (flagCount === mineCount && revealedCount === row * col - mineCount) {
+      dispatch(clearGame());
+    }
   };
 
   const handleEmptyCellClick = (cell: CellType) => {
@@ -101,6 +117,7 @@ export const Field = () => {
         continue;
       }
       newCell.status = CellStatus.REVEALED;
+      field.status.revealedCount += 1;
 
       if (newCell.value === CellMeta.EMPTY) {
         handleEmptyCellClick(newCell);

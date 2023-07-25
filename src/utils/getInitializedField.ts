@@ -9,11 +9,7 @@ import { getEmptyField } from "./getEmptyField";
  * @returns Field 타입의 초기화 된 게임판
  */
 
-export const getInitializedField = ({
-  row,
-  col,
-  mineCount,
-}: Omit<FieldMeta, "flagCount">) => {
+export const getInitializedField = ({ row, col, mineCount }: FieldMeta) => {
   const emptyField = getEmptyField(row, col);
 
   const fieldWithMines = setMines(emptyField, mineCount);
@@ -47,7 +43,7 @@ const setMines = (field: Field, count: number): Field => {
     })
   );
 
-  return { meta: { ...field.meta, mineCount: count }, info };
+  return { ...field, meta: { ...field.meta, mineCount: count }, info };
 };
 
 /**

@@ -15,5 +15,7 @@ export const getEmptyField = (row: number, col: number): Field => {
       status: CellStatus.HIDDEN,
     }))
   );
-  return { meta: { row, col, mineCount: 0, flagCount: 0 }, info };
+  const meta = { row, col, mineCount: 0 };
+  const status = { flagCount: 0, revealedCount: 0 };
+  return { meta, status, info };
 };

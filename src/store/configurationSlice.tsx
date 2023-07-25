@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { LEVEL } from "@constants";
-import { FieldMeta, Level } from "@types";
+import { Level } from "@types";
 
 type State = {
   level: Level;
