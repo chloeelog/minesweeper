@@ -1,8 +1,11 @@
 import { styled } from "styled-components";
 
 export const Page = styled.main`
-  height: 100vh;
-  width: 100vw;
+  height: fit-content;
+  width: fit-content;
+
+  min-height: 100vh;
+  min-width: 100vw;
 
   display: flex;
   flex-direction: column;

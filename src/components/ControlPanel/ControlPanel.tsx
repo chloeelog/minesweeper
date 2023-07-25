@@ -7,8 +7,9 @@ import { LevelKey, FieldMeta } from "@types";
 import { getInitializedField } from "@utils";
 
 import { Timer } from "@components/Timer";
-import { Counter } from "@components/Counter";
+import { FlagCounter } from "@components/FlagCounter";
 
+import { Row } from "@design-system";
 import * as S from "./ControlPanel.style";
 
 export const ControlPanel = () => {
@@ -49,9 +50,16 @@ export const ControlPanel = () => {
   };
 
   return (
-    <header>
-      <h1>지뢰찾기</h1>
-      <S.Row>
+    <S.Panel>
+      <Row>
+        <S.Title>지뢰찾기</S.Title>
+        <S.Subtitle>by @chloeelog</S.Subtitle>
+      </Row>
+      <Row gap={"1rem"}>
+        <Timer />
+        <FlagCounter />
+      </Row>
+      <Row>
         <input
           type="number"
           value={customRow}
@@ -75,7 +83,7 @@ export const ControlPanel = () => {
           onChange={(event) => setCustomMineCount(Number(event.target.value))}
           disabled={!isCustomLevel}
         />
-      </S.Row>
+      </Row>
       <select onChange={handleUpdateLevel} defaultValue={level.value}>
         {levels.map(({ label, value }) => (
           <option key={value} value={value}>
@@ -84,8 +92,6 @@ export const ControlPanel = () => {
         ))}
       </select>
       <button onClick={handleInitializeClick}>새로 시작하기</button>
-      <Timer />
-      <Counter />
-    </header>
+    </S.Panel>
   );
 };
