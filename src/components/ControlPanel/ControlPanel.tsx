@@ -6,8 +6,10 @@ import { RootState, initializeGame, setLevel, updateField } from "@store";
 import { LevelKey, FieldMeta } from "@types";
 import { getInitializedField } from "@utils";
 
-import * as S from "./ControlPanel.style";
 import { Timer } from "@components/Timer";
+import { Counter } from "@components/Counter";
+
+import * as S from "./ControlPanel.style";
 
 export const ControlPanel = () => {
   const dispatch = useDispatch();
@@ -87,6 +89,7 @@ export const ControlPanel = () => {
       </select>
       <button onClick={handleInitializeClick}>새로 시작하기</button>
       <Timer />
+      <Counter />
     </header>
   );
 };

@@ -44,7 +44,11 @@ function getDisplayedValue(cell: CellType, gameState: GameState) {
   const { value, status } = cell;
 
   if (status === CellStatus.HIDDEN) {
-    return gameState === "playing" ? "" : value === CellMeta.MINE ? "💣" : "";
+    return gameState === "ready" || gameState === "playing"
+      ? ""
+      : value === CellMeta.MINE
+      ? "💣"
+      : "";
   }
 
   if (status === CellStatus.FLAGGED) {

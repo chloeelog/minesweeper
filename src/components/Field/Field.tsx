@@ -19,6 +19,7 @@ export const Field = () => {
 
   const { row, col } = initialField.meta;
   const field = cloneDeep(initialField);
+  const { mineCount, flagCount } = field.meta;
   const info = field.info.flat();
 
   const handleCellClick = (cell: CellType) => {
@@ -55,6 +56,11 @@ export const Field = () => {
     if (gameState === "ready") {
       const now = Date.now();
       dispatch(startGame(now));
+    }
+
+    if (flagCount >= mineCount) {
+      alert("더 이상 깃발을 꽂을 수 없어요!");
+      return;
     }
 
     const { x, y, status } = cell;
