@@ -7,6 +7,7 @@ type State = {
 };
 
 type FieldAction = PayloadAction<Field>;
+type FlagCountAction = PayloadAction<number>;
 
 const initialState: State = {
   field: {} as Field,
@@ -18,6 +19,9 @@ export const fieldSlice = createSlice({
   reducers: {
     updateField: (state, action: FieldAction) => {
       state.field = action.payload;
+    },
+    updateFlagCount: (state, action: FlagCountAction) => {
+      state.field.meta.flagCount += action.payload;
     },
   },
 });

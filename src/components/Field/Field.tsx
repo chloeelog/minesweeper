@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cloneDeep } from "lodash-es";
 
 import { Cell as CellType, CellMeta, CellStatus } from "@types";
-import { RootState, overGame, updateField } from "@store";
+import { RootState, overGame, startGame, updateField } from "@store";
 
 import { Cell } from "@components/Cell";
 
@@ -10,6 +10,8 @@ import * as S from "./Field.style";
 
 export const Field = () => {
   const dispatch = useDispatch();
+
+  const { gameState } = useSelector((state: RootState) => state.gameSlice);
 
   const initialField = useSelector(
     (state: RootState) => state.fieldSlice.field
@@ -20,12 +22,22 @@ export const Field = () => {
   const info = field.info.flat();
 
   const handleCellClick = (cell: CellType) => {
+    if (gameState === "over" || gameState === "clear") {
+      return;
+    }
+
+    if (gameState === "ready") {
+      const now = Date.now();
+      dispatch(startGame(now));
+    }
+
     const { x, y, value } = cell;
-    field.info[x][y] = { ...field.info[x][y], status: CellStatus.REVEALED };
 
     if (value === CellMeta.MINE) {
       field.info[x][y] = { ...field.info[x][y], status: CellStatus.EXPLODED };
       dispatch(overGame());
+    } else {
+      field.info[x][y] = { ...field.info[x][y], status: CellStatus.REVEALED };
     }
 
     if (value === CellMeta.EMPTY) {
@@ -36,8 +48,28 @@ export const Field = () => {
   };
 
   const handleCellRightClick = (cell: CellType) => {
-    const { x, y } = cell;
-    field.info[x][y].status = CellStatus.FLAGGED;
+    if (gameState === "over" || gameState === "clear") {
+      return;
+    }
+
+    if (gameState === "ready") {
+      const now = Date.now();
+      dispatch(startGame(now));
+    }
+
+    const { x, y, status } = cell;
+
+    if (status === CellStatus.REVEALED || status === CellStatus.EXPLODED) {
+      return;
+    }
+
+    if (status === CellStatus.FLAGGED) {
+      field.info[x][y].status = CellStatus.HIDDEN;
+      field.meta.flagCount -= 1;
+    } else {
+      field.info[x][y].status = CellStatus.FLAGGED;
+      field.meta.flagCount += 1;
+    }
 
     dispatch(updateField({ ...field }));
   };
