@@ -60,6 +60,16 @@ export const ControlPanel = () => {
         <FlagCounter />
       </Row>
       <Row>
+        <select onChange={handleUpdateLevel} defaultValue={level.value}>
+          {levels.map(({ label, value }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleInitializeClick}>새로 시작하기</button>
+      </Row>
+      <Row>
         <input
           type="number"
           value={customRow}
@@ -84,14 +94,6 @@ export const ControlPanel = () => {
           disabled={!isCustomLevel}
         />
       </Row>
-      <select onChange={handleUpdateLevel} defaultValue={level.value}>
-        {levels.map(({ label, value }) => (
-          <option key={value} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
-      <button onClick={handleInitializeClick}>새로 시작하기</button>
     </S.Panel>
   );
 };

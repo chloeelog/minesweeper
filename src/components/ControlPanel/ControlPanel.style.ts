@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 
 export const Panel = styled.header`
   width: 100vw;
-  height: var(--panel-height);
+  min-height: var(--panel-height);
 
   padding: 2rem;
   background-color: var(--gray-800);
