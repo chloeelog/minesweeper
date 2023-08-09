@@ -1,3 +1,6 @@
 #root {
   --cell-size: 2rem;
+  --cell-border: 3px;
+
+  --panel-height: 10rem;
 }

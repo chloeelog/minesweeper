@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "@store";
+import { Row } from "@design-system";
 
 export const Timer = () => {
   const [time, setTime] = useState(0);
@@ -34,9 +35,12 @@ export const Timer = () => {
   }, [gameState, startsAt]);
 
   return (
-    <div>
-      {displayTime}, {gameState}
-    </div>
+    <Row gap="0.25rem">
+      <span role="img" aria-label="timer">
+        ⏰
+      </span>
+      {displayTime}
+    </Row>
   );
 };
 
@@ -50,8 +54,7 @@ function formatSeconds(seconds: number) {
       .toString()
       .padStart(2, "0")}`;
   }
-  if (minutes > 0) {
-    return `${minutes}:${restSeconds.toString().padStart(2, "0")}`;
-  }
-  return `${restSeconds}`;
+  return `${minutes.toString().padStart(2, "0")}:${restSeconds
+    .toString()
+    .padStart(2, "0")}`;
 }

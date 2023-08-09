@@ -1,0 +1,11 @@
+@import "./reset.css";
+@import "./sizing.css";
+@import "./colors.css";
+@import "./font.css";
+
+/* global */
+* {
+  box-sizing: border-box;
+  font-family: "DungGeunMo", sans-serif;
+  color: var(--text-contrast);
+}

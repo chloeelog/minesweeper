@@ -38,6 +38,7 @@ export const Field = () => {
     if (value === CellMeta.MINE) {
       field.info[x][y] = { ...field.info[x][y], status: CellStatus.EXPLODED };
       dispatch(overGame());
+      setTimeout(() => alert("지뢰를 밟았어요!"), 0);
     } else {
       if (field.info[x][y].status === CellStatus.FLAGGED) {
         field.status.flagCount -= 1;
@@ -55,6 +56,7 @@ export const Field = () => {
     const { flagCount, revealedCount } = field.status;
     if (flagCount === mineCount && revealedCount === row * col - mineCount) {
       dispatch(clearGame());
+      setTimeout(() => alert("지뢰를 모두 찾았어요!"), 0);
     }
   };
 
@@ -70,11 +72,6 @@ export const Field = () => {
 
     const { flagCount, revealedCount } = field.status;
 
-    if (flagCount >= mineCount) {
-      alert("더 이상 깃발을 꽂을 수 없어요!");
-      return;
-    }
-
     const { x, y, status } = cell;
 
     if (status === CellStatus.REVEALED || status === CellStatus.EXPLODED) {
@@ -85,6 +82,12 @@ export const Field = () => {
       field.info[x][y].status = CellStatus.HIDDEN;
       field.status.flagCount -= 1;
     } else {
+      if (flagCount >= mineCount) {
+        alert("더 이상 깃발을 꽂을 수 없어요!");
+        return;
+      }
+
+      console.log("flagged", field.status.flagCount);
       field.info[x][y].status = CellStatus.FLAGGED;
       field.status.flagCount += 1;
     }
@@ -93,6 +96,7 @@ export const Field = () => {
 
     if (flagCount === mineCount && revealedCount === row * col - mineCount) {
       dispatch(clearGame());
+      setTimeout(() => alert("지뢰를 모두 찾았어요!"), 0);
     }
   };
 
