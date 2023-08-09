@@ -1,38 +1,13 @@
+import { CellMeta, CellMetaValue, Field as FieldType } from "@types";
+import * as S from "./Field.style";
+import { Cell } from "@components/Cell";
+
 const BEGINNER = {
   ROW: 8,
   COL: 8,
 } as const;
 
-// 인접한 지뢰의 개수, -1인 경우 지뢰
-const CellMeta = {
-  MINE: -1,
-  EMPTY: 0,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-} as const;
-
-type CellMetaKey = keyof typeof CellMeta;
-type CellMetaValue = (typeof CellMeta)[CellMetaKey];
-
-type Cell = {
-  x: number;
-  y: number;
-  value: CellMetaValue;
-  isRevealed: boolean;
-};
-
-type Field = {
-  meta: { row: number; col: number; mine: number };
-  info: Array<Array<Cell>>;
-};
-
-const initializeField = (row: number, col: number): Field => {
+const initializeField = (row: number, col: number): FieldType => {
   const info = Array.from({ length: row }, (_, rowIdx) =>
     Array.from({ length: col }, (_, colIdx) => ({
       x: rowIdx,
@@ -44,7 +19,7 @@ const initializeField = (row: number, col: number): Field => {
   return { meta: { row, col, mine: 0 }, info };
 };
 
-const initializeMines = (field: Field, count: number): Field => {
+const initializeMines = (field: FieldType, count: number): FieldType => {
   const cells = field.info.flat();
   const mines = cells
     .slice()
@@ -66,7 +41,7 @@ const initializeMines = (field: Field, count: number): Field => {
   return { meta: { ...field.meta, mine: count }, info };
 };
 
-const getAdjacentCellInfo = (field: Field): Field => {
+const getAdjacentCellInfo = (field: FieldType): FieldType => {
   const { row: rowCnt, col: colCnt } = field.meta;
   const { info } = field;
 
@@ -106,20 +81,16 @@ const getAdjacentCellInfo = (field: Field): Field => {
 
 const emptyField = initializeField(BEGINNER.ROW, BEGINNER.COL);
 const mineField = initializeMines(emptyField, 10);
-const field = getAdjacentCellInfo(mineField).info;
+const info = getAdjacentCellInfo(mineField).info.flat();
 
 export const Field = () => {
+  const { ROW: row, COL: col } = BEGINNER;
   return (
-    <div>
-      {field.map((row, rowIdx) => (
-        <div key={"row" + rowIdx}>
-          {row.map((cell, colIdx) => (
-            <span key={"cell" + rowIdx + colIdx} style={{ padding: "8px" }}>
-              {cell.value}
-            </span>
-          ))}
-        </div>
-      ))}
-    </div>
+    <S.Field $row={row} $col={col}>
+      {info.map((cell) => {
+        const { x, y } = cell;
+        return <Cell key={`${x}-${y}`} cell={cell} />;
+      })}
+    </S.Field>
   );
 };

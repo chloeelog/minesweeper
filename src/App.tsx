@@ -1,10 +1,11 @@
-import { Field } from "./components/Field/Field";
+import { Field } from "@components/Field";
+import * as S from "./App.style";
 
 function App() {
   return (
-    <main>
+    <S.Page>
       <Field />
-    </main>
+    </S.Page>
   );
 }
 
