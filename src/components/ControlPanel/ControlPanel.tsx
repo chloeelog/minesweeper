@@ -2,9 +2,12 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { LEVEL } from "@constants";
-import { RootState, setLevel, updateField } from "@store";
+import { RootState, initializeGame, setLevel, updateField } from "@store";
 import { LevelKey, FieldMeta } from "@types";
 import { getInitializedField } from "@utils";
+
+import { Timer } from "@components/Timer";
+import { Counter } from "@components/Counter";
 
 import * as S from "./ControlPanel.style";
 
@@ -32,6 +35,8 @@ export const ControlPanel = () => {
   };
 
   const handleInitializeClick = () => {
+    dispatch(initializeGame());
+
     if (level === LEVEL.CUSTOM) {
       initializeField({
         row: customRow,
@@ -79,6 +84,8 @@ export const ControlPanel = () => {
         ))}
       </select>
       <button onClick={handleInitializeClick}>새로 시작하기</button>
+      <Timer />
+      <Counter />
     </header>
   );
 };

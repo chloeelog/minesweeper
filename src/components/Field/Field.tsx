@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cloneDeep } from "lodash-es";
 
 import { Cell as CellType, CellMeta, CellStatus } from "@types";
-import { RootState, overGame, updateField } from "@store";
+import { RootState, clearGame, overGame, startGame, updateField } from "@store";
 
 import { Cell } from "@components/Cell";
 
@@ -11,21 +11,39 @@ import * as S from "./Field.style";
 export const Field = () => {
   const dispatch = useDispatch();
 
+  const { gameState } = useSelector((state: RootState) => state.gameSlice);
+
   const initialField = useSelector(
     (state: RootState) => state.fieldSlice.field
   );
 
-  const { row, col } = initialField.meta;
   const field = cloneDeep(initialField);
+
+  const { row, col, mineCount } = field.meta;
+
   const info = field.info.flat();
 
   const handleCellClick = (cell: CellType) => {
+    if (gameState === "over" || gameState === "clear") {
+      return;
+    }
+
+    if (gameState === "ready") {
+      const now = Date.now();
+      dispatch(startGame(now));
+    }
+
     const { x, y, value } = cell;
-    field.info[x][y] = { ...field.info[x][y], status: CellStatus.REVEALED };
 
     if (value === CellMeta.MINE) {
       field.info[x][y] = { ...field.info[x][y], status: CellStatus.EXPLODED };
       dispatch(overGame());
+    } else {
+      if (field.info[x][y].status === CellStatus.FLAGGED) {
+        field.status.flagCount -= 1;
+      }
+      field.info[x][y] = { ...field.info[x][y], status: CellStatus.REVEALED };
+      field.status.revealedCount += 1;
     }
 
     if (value === CellMeta.EMPTY) {
@@ -33,13 +51,49 @@ export const Field = () => {
     }
 
     dispatch(updateField({ ...field }));
+
+    const { flagCount, revealedCount } = field.status;
+    if (flagCount === mineCount && revealedCount === row * col - mineCount) {
+      dispatch(clearGame());
+    }
   };
 
   const handleCellRightClick = (cell: CellType) => {
-    const { x, y } = cell;
-    field.info[x][y].status = CellStatus.FLAGGED;
+    if (gameState === "over" || gameState === "clear") {
+      return;
+    }
+
+    if (gameState === "ready") {
+      const now = Date.now();
+      dispatch(startGame(now));
+    }
+
+    const { flagCount, revealedCount } = field.status;
+
+    if (flagCount >= mineCount) {
+      alert("더 이상 깃발을 꽂을 수 없어요!");
+      return;
+    }
+
+    const { x, y, status } = cell;
+
+    if (status === CellStatus.REVEALED || status === CellStatus.EXPLODED) {
+      return;
+    }
+
+    if (status === CellStatus.FLAGGED) {
+      field.info[x][y].status = CellStatus.HIDDEN;
+      field.status.flagCount -= 1;
+    } else {
+      field.info[x][y].status = CellStatus.FLAGGED;
+      field.status.flagCount += 1;
+    }
 
     dispatch(updateField({ ...field }));
+
+    if (flagCount === mineCount && revealedCount === row * col - mineCount) {
+      dispatch(clearGame());
+    }
   };
 
   const handleEmptyCellClick = (cell: CellType) => {
@@ -63,6 +117,7 @@ export const Field = () => {
         continue;
       }
       newCell.status = CellStatus.REVEALED;
+      field.status.revealedCount += 1;
 
       if (newCell.value === CellMeta.EMPTY) {
         handleEmptyCellClick(newCell);

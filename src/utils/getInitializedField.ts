@@ -43,7 +43,7 @@ const setMines = (field: Field, count: number): Field => {
     })
   );
 
-  return { meta: { ...field.meta, mineCount: count }, info };
+  return { ...field, meta: { ...field.meta, mineCount: count }, info };
 };
 
 /**
