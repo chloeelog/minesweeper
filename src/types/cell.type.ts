@@ -1,3 +1,5 @@
+// TODO: CellMeta, CellStatus를 enum으로 변경하거나 constants로 이동
+
 // 인접한 지뢰의 개수, -1인 경우 지뢰
 export const CellMeta = {
   MINE: -1,
@@ -19,6 +21,7 @@ export const CellStatus = {
   HIDDEN: 0,
   REVEALED: 1,
   FLAGGED: 2,
+  EXPLODED: 3,
 } as const;
 
 export type CellStatusKey = keyof typeof CellStatus;
